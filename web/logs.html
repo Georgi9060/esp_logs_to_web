@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ESP32 Logs To Web</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h2>ESP32 Log Viewer</h2>
+  <div class="button-container">
+    <button onclick="location.href='index.html'">Index</button>
+
+  </div>
+  <div id="logBox"></div>
+  <button onclick="downloadLog()">Save Log</button>
+  <pre id="inPageConsole"></pre>
+
+  <script src="script.js"></script>
+</body>
+</html>
