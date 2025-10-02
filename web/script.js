@@ -5,7 +5,7 @@ const logBox = document.getElementById("logBox");
 // On page load, restore any saved ESP logs
 window.addEventListener("DOMContentLoaded", () => {
     const savedLogs = sessionStorage.getItem("esp32Logs");
-    if (savedLogs) {
+    if (savedLogs  && logBox) {
         // Split saved logs into lines and append spans
         savedLogs.split("\n").forEach(line => {
             if (!line) return;
@@ -26,8 +26,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
 ws.onopen = () => {
     console.log("Connected to ESP32 WebSocket");
-    const pageName = window.location.pathname.split("/").pop(); 
-    ws.send(JSON.stringify({ type: "page_open", page: pageName }));
 }
 
 ws.onmessage = (event) => {
@@ -54,17 +52,19 @@ ws.onmessage = (event) => {
         logs += msg + "\n";
         sessionStorage.setItem("esp32Logs", logs);
 
-        const span = document.createElement("span");
-        if (msg.startsWith('W') || msg.includes(' W ')) {
-            span.classList.add('warn');
-        } else if (msg.startsWith('E') || msg.includes(' E ')) {
-            span.classList.add('error');
-        } else {
-            span.classList.add('info');
+        if (logBox) {
+            const span = document.createElement("span");
+            if (msg.startsWith('W') || msg.includes(' W ')) {
+                span.classList.add('warn');
+            } else if (msg.startsWith('E') || msg.includes(' E ')) {
+                span.classList.add('error');
+            } else {
+                span.classList.add('info');
+            }
+            span.textContent = msg + "\n";
+            logBox.appendChild(span);
+            logBox.scrollTop = logBox.scrollHeight;
         }
-        span.textContent = msg + "\n";
-        logBox.appendChild(span);
-        logBox.scrollTop = logBox.scrollHeight;
     }
 };
 
@@ -89,11 +89,11 @@ ws.onerror = (error) => console.error("WebSocket error:", error);
 
 function downloadLog() {
     // Extract plain text (ignores colors)
-    const text = logBox.innerText;
+    const text = logBox ? logBox.innerText : sessionStorage.getItem("esp32Logs") || "";
 
     // Create unique filename (timestamp based)
     const now = new Date();
-    const timestamp = now.toISOString().replace(/[:.]/g, "-"); // safe filename
+    const timestamp = now.toISOString().replace(/[:.]/g, "-");
     const filename = "esp32_log_" + timestamp + ".txt";
 
     // Make blob & trigger download
