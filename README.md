@@ -40,7 +40,7 @@ The microcontroller streams `ESP_LOG` output directly to a browser webpage via W
 
 ## Usage
 
-1.  After flashing, check the serial monitor for the ESP32’s IP address:
+1.  After flashing, connect to the Wi-Fi Access Point with the correct credentials, then check the serial monitor for the ESP32’s IP address:
 	```
 	I (813) wifi softAP: wifi_init_softap finished. SSID:ESP32 Web Logs password:mypassword 	channel:6
 	I (814) esp_netif_lwip: DHCP server started on interface WIFI_AP_DEF with IP: 192.168.4.1
